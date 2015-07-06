@@ -124,7 +124,7 @@ switch ($sendType) {
             @$debugArrayNew['用户'] =  $wxuser['nickname'];
             @$debugArrayNew['性别'] =  $wxuser['sex'] == 1 ? '男' : '女';
             @$debugArrayNew['头像'] = "<a href='{$wxuser['headimgurl']}'>查看</a>";
-			AppUtil:: debugErrorSendWx('发红包接口返回', $debugArrayNew, true, 4);
+			//AppUtil:: debugErrorSendWx('发红包接口返回', $debugArrayNew, true, 4);
 
 			if (!empty($res)){
 				echo json_encode($res);
@@ -238,7 +238,7 @@ switch ($sendType) {
             @$debugArrayNew['用户'] =  $wxuser['nickname'];
             @$debugArrayNew['性别'] =  $wxuser['sex'] == 1 ? '男' : '女';
             @$debugArrayNew['头像'] = "<a href='{$wxuser['headimgurl']}'>查看</a>";
-			AppUtil:: debugErrorSendWx('发红包接口返回', $debugArrayNew, true, 4);
+			//AppUtil:: debugErrorSendWx('发红包接口返回', $debugArrayNew, true, 4);
 
 			if (!empty($res)){
 				echo json_encode($res);
