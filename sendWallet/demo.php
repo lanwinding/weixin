@@ -50,7 +50,9 @@ if(empty($sendType)){
 	$sendType = $amount < 100 ? 'transfers' : 'redpack';
 }
 
-
+//redpack => 红包接口
+//group_redpack => 裂变红包
+//transfers => 企业付款
 switch ($sendType) {
 	case 'redpack':
 			$SendRedpack = $sendWallet_app; //红包 与 企业付款公用 类
