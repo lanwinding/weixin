@@ -25,7 +25,7 @@
  *		|_  在之前的参数基础上增加  signature、timestamp、nonce 这三个验证 签名的参数
  *
  * @version v1.0
- * @copyright  小农民科技
+ * @copyright  小农民科技  
  * @author sixian
  * @createtime 2015-07-06 13:20
  */
@@ -50,28 +50,6 @@ if(empty($sendType)){
 	$sendType = $amount < 100 ? 'transfers' : 'redpack';
 }
 
-// 签名验证
-$signature = isset($_REQUEST['signature']) ? $_REQUEST['signature'] : '';
-$timestamp = isset($_REQUEST['timestamp']) ? $_REQUEST['timestamp'] : '';
-$nonce     = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : '';
-
-// 线上开启以下签名代码
-// if (isset($_SERVER['APP_ENV']) && $_SERVER['APP_ENV'] == 'production') {		
-// 	if ( $sendWallet_app->checkSignature($signature, $timestamp, $nonce) ) {
-// 	    $_SESSION[SESSIONUSER] = $_GET['nonce'];
-// 	}else{		 
-// 		// 出现错误时 下发调试信息 到微信   
-// 	    $res = $sendWallet_app->debugErrorSendWx("sendWalletApi签名不正确" , array('真实签名' => WxPayConf_pub::privateKey));
-
-// 		$sendData['真实签名'] =  WxPayConf_pub::privateKey;
-
-// 	    $res = AppUtil::debugErrorSendWx("sendWalletApi签名不正确" , $sendData, true, 5, '');
-// 	    echo json_encode( array('return_code' => 'FAIL', 'return_msg' => 'sendWalletApi签名不正确', 'return_ext' => $res ) );
-// 	    exit;
-// 	}
-// }
-
-
 
 switch ($sendType) {
 	case 'redpack':
@@ -80,7 +58,7 @@ switch ($sendType) {
 			$SendRedpack->set_mch_billno( $mch_billno );  				//唯一订单号
 			//$SendRedpack->set_mch_id( WxPayConf_pub::MCHID ); 	     	// 商户号 默认已在配置文件中配置
 			//$SendRedpack->set_wxappid( WxPayConf_pub::APPID );			// appid  默认已在配置文件中配置
-			$SendRedpack->set_nick_name( $act_name );                		// 提供方名称     idea0086
+			$SendRedpack->set_nick_name( $act_name );                		// 提供方名称     小农民科技
 			$SendRedpack->set_send_name( $act_name );                 	 	
 			// 红包发送者名称  商户名称
 			$SendRedpack->set_re_openid( $openid);						    // 用户在wxappid下的openid
@@ -106,25 +84,6 @@ switch ($sendType) {
 			$data 		 = walletWeixinUtil::curl_post_ssl($getNewData['api_url'], $getNewData['xml_data']);
 			$res 		 = @simplexml_load_string($data,NULL,LIBXML_NOCDATA);
 
-            // TODO::红包通知		            
-            $callback                  = json_encode($res);
-            $callbackArr               = json_decode($callback, true);
-            $debugArrayNew['openid']   = $openid;
-            $debugArrayNew['状态']     = @$callbackArr['return_code'];
-            $debugArrayNew['返回信息'] = @$callbackArr['return_msg'] . "\n";
-
-            $debugArrayNew['活动名称'] = $act_name;
-            $debugArrayNew['发放金额'] = $amount."【分】";
-            $debugArrayNew['发放类型'] = '微信红包';
-            $debugArrayNew['红包编号'] = $mch_billno . "\n";
-
-            $wxuser = $this->dao_read->getWxuserByopenid($openid, '', 1);
-            $wxuser = @$wxuser[0];
-
-            @$debugArrayNew['用户'] =  $wxuser['nickname'];
-            @$debugArrayNew['性别'] =  $wxuser['sex'] == 1 ? '男' : '女';
-            @$debugArrayNew['头像'] = "<a href='{$wxuser['headimgurl']}'>查看</a>";
-			//AppUtil:: debugErrorSendWx('发红包接口返回', $debugArrayNew, true, 4);
 
 			if (!empty($res)){
 				echo json_encode($res);
@@ -141,7 +100,7 @@ switch ($sendType) {
 			$SendRedpack->set_mch_billno( $mch_billno );  				//唯一订单号
 			//$SendRedpack->set_mch_id( WxPayConf_pub::MCHID ); 	     	// 商户号 默认已在配置文件中配置
 			//$SendRedpack->set_wxappid( WxPayConf_pub::APPID );			// appid  默认已在配置文件中配置
-			$SendRedpack->set_nick_name( $act_name );                		// 提供方名称     idea0086
+			$SendRedpack->set_nick_name( $act_name );                		// 提供方名称     小农民科技
 			$SendRedpack->set_send_name( $act_name );                 	 	
 			// 红包发送者名称  商户名称
 			$SendRedpack->set_re_openid( $openid);						    // 用户在wxappid下的openid
@@ -169,25 +128,6 @@ switch ($sendType) {
 			$data 		 = walletWeixinUtil::curl_post_ssl($getNewData['api_url'], $getNewData['xml_data']);
 			$res 		 = @simplexml_load_string($data,NULL,LIBXML_NOCDATA);
 
-            // TODO::红包通知		            
-            $callback                  = json_encode($res);
-            $callbackArr               = json_decode($callback, true);
-            $debugArrayNew['openid']   = $openid;
-            $debugArrayNew['状态']     = @$callbackArr['return_code'];
-            $debugArrayNew['返回信息'] = @$callbackArr['return_msg'] . "\n";
-
-            $debugArrayNew['活动名称'] = $act_name;
-            $debugArrayNew['发放金额'] = $amount."【分】";
-            $debugArrayNew['发放类型'] = '裂变红包';
-            $debugArrayNew['红包编号'] = $mch_billno . "\n";
-
-            $wxuser = $this->dao_read->getWxuserByopenid($openid, '', 1);
-            $wxuser = @$wxuser[0];
-
-            @$debugArrayNew['用户'] =  $wxuser['nickname'];
-            @$debugArrayNew['性别'] =  $wxuser['sex'] == 1 ? '男' : '女';
-            @$debugArrayNew['头像'] = "<a href='{$wxuser['headimgurl']}'>查看</a>";
-			//AppUtil:: debugErrorSendWx('发红包接口返回', $debugArrayNew, true, 4);
 
 			if (!empty($res)){
 				echo json_encode($res);
@@ -220,25 +160,6 @@ switch ($sendType) {
 			$data = walletWeixinUtil::curl_post_ssl($getNewData['api_url'], $getNewData['xml_data']);
 			$res  = @simplexml_load_string($data,NULL,LIBXML_NOCDATA);
 
-            // TODO::红包通知
-            $callback                  = json_encode($res);
-            $callbackArr               = json_decode($callback, true);
-            $debugArrayNew['openid']   = $openid;
-            $debugArrayNew['状态']     = @$callbackArr['return_code'];
-            $debugArrayNew['返回信息'] = @$callbackArr['return_msg'] . "\n";
-
-            $debugArrayNew['活动名称'] = $act_name;
-            $debugArrayNew['发放金额'] = $amount."【分】";
-            $debugArrayNew['发放类型'] = '企业付款';
-            $debugArrayNew['红包编号'] = $mch_billno . "\n";
-
-            $wxuser = $this->dao_read->getWxuserByopenid($openid, '', 1);
-            $wxuser = @$wxuser[0];
-
-            @$debugArrayNew['用户'] =  $wxuser['nickname'];
-            @$debugArrayNew['性别'] =  $wxuser['sex'] == 1 ? '男' : '女';
-            @$debugArrayNew['头像'] = "<a href='{$wxuser['headimgurl']}'>查看</a>";
-			//AppUtil:: debugErrorSendWx('发红包接口返回', $debugArrayNew, true, 4);
 
 			if (!empty($res)){
 				echo json_encode($res);
