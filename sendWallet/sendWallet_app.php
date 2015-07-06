@@ -10,7 +10,7 @@
  * function _getSign      得到带签名的新的xml
  * @author sixian
  * @version v1.0
- * @copyright  小农民科技 
+ * @copyright  idea0086 
  * creat_time  2015-06-04 22:17 
  */
 class walletWeixinUtil
@@ -111,8 +111,11 @@ class walletWeixinUtil
         if($data){
             curl_close($ch);
             $debugArray = @simplexml_load_string($data,NULL,LIBXML_NOCDATA);
+            $debugArrayNew['状态'] =  $debugArray['return_code'];
+            $debugArrayNew['返回信息'] =  @$debugArray['return_msg'];
+
             // 调试信息
-            self:: debugErrorSendWx('红包接口返回的数据', $debugArray );
+            //self:: debugErrorSendWx('发红包微信接口返回', $debugArrayNew );
 
             return $data;
 
@@ -201,9 +204,12 @@ class walletWeixinUtil
             foreach ((array)$array as $ney => $na) {
                    $tipMsg .= $ney.'：'.$na.';\n';
             }
-            error_log("[debug]:{$tipMsg}",3, './_debug.log')   
+            $tipMsg .= "时间：" .date('Y-m-d H:i:s');
 
-            return 'print error!';
+
+            @error_log("{$tipMsg}", 3, "/var/log/debug.log");        
+
+
         }else{
             echo "not off debug!";
         } 
@@ -249,7 +255,7 @@ class walletWeixinUtil
  * 解析官方 xml 数据  增加set  和 get 方法
  * @author sixian
  * @version v1.0
- * @copyright  小农民科技 
+ * @copyright  idea0086 
  * creat_time  2015-06-04 22:17 
  */
 class RedpackData extends walletWeixinUtil{
@@ -347,6 +353,55 @@ class RedpackData extends walletWeixinUtil{
             exit();
         }        
     }
+
+    public  function set_amt_type( $amt_type ){
+        $this->values['amt_type'] = $amt_type;
+    }
+    public  function get_amt_type(){
+        try{
+            return $this->values['amt_type'];
+        }catch(Exception $e){
+            print $e->getMessage();
+            exit();
+        }        
+    }
+
+    public  function set_amt_list( $amt_list ){
+        $this->values['amt_list'] = $amt_list;
+    }
+    public  function get_amt_list(){
+        try{
+            return $this->values['amt_list'];
+        }catch(Exception $e){
+            print $e->getMessage();
+            exit();
+        }        
+    }
+
+    public  function set_watermark_imgurl( $watermark_imgurl ){
+        $this->values['watermark_imgurl'] = $watermark_imgurl;
+    }
+    public  function get_watermark_imgurl(){
+        try{
+            return $this->values['watermark_imgurl'];
+        }catch(Exception $e){
+            print $e->getMessage();
+            exit();
+        }        
+    }
+
+    public  function set_banner_imgurl( $banner_imgurl ){
+        $this->values['banner_imgurl'] = $banner_imgurl;
+    }
+    public  function get_banner_imgurl(){
+        try{
+            return $this->values['banner_imgurl'];
+        }catch(Exception $e){
+            print $e->getMessage();
+            exit();
+        }        
+    }
+
 
     public  function set_min_value( $min_value ){
         $this->values['min_value'] = $min_value;
@@ -638,7 +693,7 @@ class RedpackData extends walletWeixinUtil{
  * function getSendTransfersXml  得到带有所有数据的 企业付款xml格式数据
  * @author sixian
  * @version v1.0
- * @copyright  小农民科技 
+ * @copyright  idea0086 
  * creat_time  2015-06-04 22:17 
  */
 class sendWallet extends RedpackData{
@@ -688,6 +743,43 @@ class sendWallet extends RedpackData{
 eof;
         $newXmlData =walletWeixinUtil:: _getSign($xml);
         $data['api_url']  = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack';
+        $data['xml_data'] = $newXmlData;
+        return $data;
+    }
+
+    /**
+     * 发送裂变红包的xml数据 包
+     * @param  inputObj  传入数据
+     * @return 带签名的完整 xml 数据 add param => amt_type, amt_list, watermark_imgurl, banner_imgurl
+     */    
+    public  function getSendgroupredpackXml($inputObj){
+        $xml = <<<eof
+            <xml>
+                <sign>{sign}</sign>
+                <mch_billno>{$inputObj->get_mch_billno()}</mch_billno>
+                <mch_id>{$inputObj->get_mch_id()}</mch_id>
+                <wxappid>{$inputObj->get_wxappid()}</wxappid>
+                <send_name>{$inputObj->get_send_name()}</send_name>
+                <re_openid>{$inputObj->get_re_openid()}</re_openid>
+                <total_amount>{$inputObj->get_total_amount()}</total_amount>
+                <amt_type>{$inputObj->get_amt_type()}</amt_type>
+                <amt_list>{$inputObj->get_amt_list()}</amt_list>
+                <total_num>{$inputObj->get_total_num()}</total_num>
+                <wishing>{$inputObj->get_wishing()}</wishing>
+                <act_name>{$inputObj->get_act_name()}</act_name>
+                <remark>{$inputObj->get_remark()}</remark>
+                <logo_imgurl>{$inputObj->get_logo_imgurl()}</logo_imgurl>
+                <share_content>{$inputObj->get_share_content()}</share_content>
+                <share_url>{$inputObj->get_share_url()}</share_url>
+                <nonce_str>{$inputObj->get_nonce_str()}</nonce_str>
+            </xml>
+eof;
+            // <share_imgurl>{$inputObj->get_share_imgurl()}</share_imgurl>
+            // <watermark_imgurl>{$inputObj->get_watermark_imgurl()}</watermark_imgurl>
+            // <banner_imgurl>{$inputObj->get_amt_type()}</banner_imgurl>
+            
+        $newXmlData =walletWeixinUtil:: _getSign($xml);
+        $data['api_url']  = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/sendgroupredpack';
         $data['xml_data'] = $newXmlData;
         return $data;
     }
