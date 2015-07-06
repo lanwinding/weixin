@@ -25,7 +25,7 @@
  *		|_  在之前的参数基础上增加  signature、timestamp、nonce 这三个验证 签名的参数
  *
  * @version v1.0
- * @copyright  idea0086  
+ * @copyright  小农民科技
  * @author sixian
  * @createtime 2015-07-06 13:20
  */
