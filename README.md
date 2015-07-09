@@ -29,5 +29,3 @@ version  v1.1
 * 红包金额每次不能少于 100 分， 裂变红包平均每个不能少于100分
 * APPSECRET 与 KEY 注意不能放错否则也会出现签名错误的情况
 
-#### 小农民科技微信公众平台
-![weixinlogo](http://demo.wx78585.com/faces_demo/theme/default/images/webwxgetmsgimg.jpg)
