@@ -20,12 +20,12 @@ version  v1.1
 * $sendType   // 发送类型
 * $sendNum    // 发送红包数量（裂变）
 
-### 使用时注意
+### 配置
 * 配置 WxPay.pub.config.php 中的文件
 * 注意商户证书的路径 为绝对路径
 
-### 红包接口注意
-* 裂变红包不能传入 share_imgurl watermark_imgurl banner_imgurl 这三个参数，否则会出现签名错误
-* 红包金额每次不能少于 100 分， 裂变红包平均每个不能少于100分
-* APPSECRET 与 KEY 注意不能放错否则也会出现签名错误的情况
+### 注意
+* 裂变红包不能传入 `share_imgurl` `watermark_imgurl` `banner_imgurl` 这三个参数，否则会出现签名错误
+* 红包金额每次不能少于100分， 裂变红包平均每个不能少于100分
+* APPSECRET 与 KEY 注意不能放错,否则也会出现签名错误的情况
 
