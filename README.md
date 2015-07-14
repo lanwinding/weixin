@@ -12,13 +12,15 @@ version  v1.1
 * 裂变红包接口
 
 ### demo接口传入的参数：
-* $mch_billno // 唯一订单号
-* $act_name   // 名称
-* $openid     // 红包openbid
-* $amount     // 红包金额
-* $wishing    // 描述
-* $sendType   // 发送类型
-* $sendNum    // 发送红包数量（裂变）
+|参数|说明
+|-----|-----------
+|@mch_billno | 唯一订单号
+|@act_name   | 名称
+|@openid     | 红包openbid
+|@amount     | 红包金额
+|@wishing    | 描述
+|@sendType   |发送类型
+|@sendNum    | 发送红包数量（裂变）
 
 ### 配置
 * 配置 WxPay.pub.config.php 中的文件
